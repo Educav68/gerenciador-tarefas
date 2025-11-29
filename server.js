@@ -19,7 +19,10 @@ const app = express();
 // Configura o CORS
 app.use(cors({
     // 🚨 AJUSTE AQUI: O Front-end está rodando na porta 5173 (Vite) 🚨
-    origin: 'http://localhost:5173' 
+    origin: [
+        'http://localhost:5173',
+        'https://gertarefas.netlify.app/login'
+    ]
 }));
 
 // Middleware para processar JSON
