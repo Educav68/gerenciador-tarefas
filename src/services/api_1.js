@@ -2,9 +2,9 @@
 
 import axios from 'axios';
 
-// O Vite vai tentar ler a variável do Netlify (VITE_API_URL).
-// Se não achar (no seu PC), usa o localhost.
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+// Altere para a URL correta do seu Backend
+// const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = 'https://gerenciador-tarefas-hsj5.onrender.com'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
