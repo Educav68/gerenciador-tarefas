@@ -16,11 +16,13 @@ connectDB();
 // 2. Inicializa o Express
 const app = express();
 
-// 🚨 CORREÇÃO BLINDADA DO CORS 🚨
+// Configura o CORS
 app.use(cors({
-    origin: '*', // Aceita qualquer origem (Netlify, Localhost, etc)
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'] // 👈 OBRIGATÓRIO para o JWT passar
+    // 🚨 AJUSTE AQUI: O Front-end está rodando na porta 5173 (Vite) 🚨
+    origin: [
+        'http://localhost:5173',
+        'https://gertarefas.netlify.app'
+    ]
 }));
 
 // Middleware para processar JSON
