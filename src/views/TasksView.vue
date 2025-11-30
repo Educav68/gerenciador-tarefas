@@ -23,7 +23,7 @@
                     <button @click="cancelDeleteTask" class="cancel-delete-button">Cancelar</button>
                     <button @click="confirmDeleteTask" class="confirm-delete-button">Excluir</button>
                   </div>
-                </div>
+              </div>
           </div>
 
         <div v-if="showEmailModal" class="email-modal-overlay">
