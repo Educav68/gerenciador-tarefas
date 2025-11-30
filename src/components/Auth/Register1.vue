@@ -1,32 +1,31 @@
+// src/components/Auth/Register.vue (Ajustado)
 <template>
-      <div>
+  <div>
 
-            <div class="auth-container">
-                  <h2>Registro de Novo Usuário</h2>
-                  <input type="email" v-model="email" placeholder="E-mail" required />
-                  <input type="password" v-model="password" placeholder="Senha (mín. 8 dígitos)" required
-                minlength="8" />
-                  <button @click="handleRegister">Registrar</button>
-                  <br>
-                  <p>Já tem conta? <router-link to="/login">Faça Login</router-link></p>
-                </div>
-            <div v-if="showFeedbackModal" class="delete-confirmation-overlay">
-                  <div class="delete-confirmation-modal">
-                        <p>{{ feedbackMessage }}</p>
-                        <div class="modal-buttons">
-                              <button @click="closeFeedbackModal" class="confirm-delete-button">OK</button>
-                            </div>
-                      </div>
-                </div>
+    <div class="auth-container">
+      <h2>Registro de Novo Usuário</h2>
+      <input type="email" v-model="email" placeholder="E-mail" required />
+      <input type="password" v-model="password" placeholder="Senha (mín. 8 dígitos)" required minlength="8" />
+      <button @click="handleRegister">Registrar</button>
+      <br>
+      <p>Já tem conta? <router-link to="/login">Faça Login</router-link></p>
+    </div>
+    <div v-if="showFeedbackModal" class="delete-confirmation-overlay">
+      <div class="delete-confirmation-modal">
+        <p>{{ feedbackMessage }}</p>
+        <div class="modal-buttons">
+          <button @click="closeFeedbackModal" class="confirm-delete-button">OK</button>
+        </div>
+      </div>
+    </div>
 
-          </div>
+  </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import axios from 'axios';
 import { useRouter } from 'vue-router';
-// 🚨 MUDANÇA 1: Usar o serviço centralizado 'api' 🚨
-import api from '../../services/api.js';
 
 const email = ref('');
 const password = ref('');
@@ -35,8 +34,6 @@ const router = useRouter();
 const showFeedbackModal = ref(false);
 const feedbackMessage = ref('');
 
-// 🚨 MUDANÇA 2: REMOVER import axios e const API_BASE_URL 🚨
-
 // Funções do Modal
 const showModal = (message) => {
     feedbackMessage.value = message;
@@ -44,28 +41,31 @@ const showModal = (message) => {
 };
 const closeFeedbackModal = () => {
     showFeedbackModal.value = false;
+    // Não limpa a mensagem aqui, apenas fecha
 };
+
+const API_BASE_URL = 'http://localhost:3000/api/auth';
 
 const handleRegister = async () => {
     // 1. VALIDAÇÃO DE TAMANHO MÍNIMO (FRONTEND)
+    // Ajustado para 8, conforme seu código anterior (embora 6 seja um mínimo comum)
     if (password.value.length < 8) {
         showModal('A senha deve ter pelo menos 8 caracteres.');
         return; // Impede o envio para a API
     }
 
     try {
-        // 🚨 MUDANÇA 3: Usar 'api.post' com o caminho correto da rota 🚨
-        await api.post('/auth/register', {
+        await axios.post(`${API_BASE_URL}/register`, {
             email: email.value,
             password: password.value,
         });
 
         // Mensagem de sucesso no modal
         showModal('Registro bem-sucedido! Faça login agora.');
-        // Redireciona APÓS um pequeno atraso
+        // Redireciona APÓS um pequeno atraso para que o usuário veja o modal
         setTimeout(() => {
             router.push('/login');
-        }, 1500);
+        }, 1500); 
 
     } catch (error) {
         // Lógica de tratamento de erro da API
@@ -80,8 +80,7 @@ const handleRegister = async () => {
 </script>
 
 <style scoped>
-/* Estilos mantidos, eles já estavam corretos */
-/* ... */
+/* Estilos do Formulário */
 .auth-container {
     background-color: #ffffff;
     padding: 20px;
@@ -90,22 +89,20 @@ const handleRegister = async () => {
     width: 100%;
     margin-top: 20px;
 }
-
 input {
-    display: block;
-    width: 100%;
+    display: block; 
+    width: 100%;    
     padding: 10px;
-    margin: 10px 0;
+    margin: 10px 0; 
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
+    box-sizing: border-box; 
 }
-
 button {
     display: block;
     width: 100%;
     padding: 10px;
-    background-color: #42b983;
+    background-color: #42b983; 
     color: white;
     border: none;
     border-radius: 4px;
@@ -120,8 +117,7 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    /* Fundo escuro */
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -150,10 +146,8 @@ button {
     margin-top: 15px;
 }
 
-.confirm-delete-button {
-    /* Usado como botão "OK" */
-    background-color: #42b983;
-    /* Verde para confirmar/OK */
+.confirm-delete-button { /* Usado como botão "OK" */
+    background-color: #42b983; /* Verde para confirmar/OK */
     color: white;
     border: none;
     padding: 10px 20px;
