@@ -1,43 +1,40 @@
 <template>
-    <div>
-       
-    <TaskInput :editingTask="editingTask" :isEditing="editingTask !== null" @add-task="handleAddTask"      
+  <div>
+    <TaskInput :editingTask="editingTask" :isEditing="editingTask !== null" @add-task="handleAddTask"
       @update-task="handleUpdateTask" @cancel-edit="handleCancelEdit" />
 
-       
-    <TaskList :tasks="tasks" @toggle-complete="handleToggleComplete" @delete-task="handleDeleteTask"      
+    <TaskList :tasks="tasks" @toggle-complete="handleToggleComplete" @delete-task="handleDeleteTask"
       @edit-task="handleEditTask" />
 
-        <p class="pending-count">Tarefas pendentes: {{ pendingTasksCount }}</p>
+    <p class="pending-count">Tarefas pendentes: {{ pendingTasksCount }}</p>
 
-        <div class="actions-section">
-            <button @click="openEmailModal" class="export-button">Enviar por E-mail</button>
-            <button @click="generatePdfReport" class="report-button">Relatório PDF</button>
-            <button @click="handleLogout" class="cancel-button">Sair</button>
-          </div>
+    <div class="actions-section">
+      <button @click="openEmailModal" class="export-button">Enviar por E-mail</button>
+      <button @click="generatePdfReport" class="report-button">Relatório PDF</button>
+      <button @click="handleLogout" class="cancel-button">Sair</button>
+    </div>
 
-        <div v-if="showDeleteConfirmation" class="delete-confirmation-overlay">
-            <div class="delete-confirmation-modal">
-                <p>Tem certeza que deseja excluir esta tarefa?</p>
-                <div class="modal-buttons">
-                    <button @click="cancelDeleteTask" class="cancel-delete-button">Cancelar</button>
-                    <button @click="confirmDeleteTask" class="confirm-delete-button">Excluir</button>
-                  </div>
-                </div>
-          </div>
+    <div v-if="showDeleteConfirmation" class="delete-confirmation-overlay">
+      <div class="delete-confirmation-modal">
+        <p>Tem certeza que deseja excluir esta tarefa?</p>
+        <div class="modal-buttons">
+          <button @click="cancelDeleteTask" class="cancel-delete-button">Cancelar</button>
+          <button @click="confirmDeleteTask" class="confirm-delete-button">Excluir</button>
+        </div>
+      </div>
+    </div>
 
-        <div v-if="showEmailModal" class="email-modal-overlay">
-            <div class="email-modal">
-                <h3>Enviar Tarefas por E-mail</h3>
-                <p>Para qual e-mail você gostaria de enviar a lista de tarefas?</p>
-                <input type="email" v-model="emailRecipient" placeholder="seuemail@exemplo.com" class="email-input" />
-                <div class="modal-buttons">
-                    <button @click="cancelSendEmail" class="cancel-button">Cancelar</button>
-                    <button @click="sendTasksViaMailto" class="send-email-button">Enviar</button>
-                  </div>
-              </div>
-          </div>
-     
+    <div v-if="showEmailModal" class="email-modal-overlay">
+      <div class="email-modal">
+        <h3>Enviar Tarefas por E-mail</h3>
+        <p>Para qual e-mail você gostaria de enviar a lista de tarefas?</p>
+        <input type="email" v-model="emailRecipient" placeholder="seuemail@exemplo.com" class="email-input" />
+        <div class="modal-buttons">
+          <button @click="cancelSendEmail" class="cancel-button">Cancelar</button>
+          <button @click="sendTasksViaMailto" class="send-email-button">Enviar</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -46,10 +43,10 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import TaskInput from '../components/TaskInput.vue';
 import TaskList from '../components/TaskList.vue';
-import api from '../services/api.js';
+import api from '../services/api.js'; 
 
 // --- ESTADO LOCAL E API ---
-const tasks = ref([]);
+const tasks = ref([]); 
 const editingTask = ref(null);
 const router = useRouter();
 
@@ -67,10 +64,10 @@ const pendingTasksCount = computed(() => {
 // 1. CARREGAMENTO INICIAL
 const fetchTasks = async () => {
   try {
-    const response = await api.get('/tasks');
+    const response = await api.get('/tasks'); 
     tasks.value = response.data.map(task => ({
-      ...task,
-      id: task._id
+        ...task,
+        id: task._id
     }));
   } catch (error) {
     console.error('Erro ao buscar tarefas:', error);
@@ -82,7 +79,7 @@ const handleAddTask = async (taskText) => {
   if (taskText.trim() === '') return;
   try {
     const response = await api.post('/tasks', { text: taskText });
-    tasks.value.push({ ...response.data, id: response.data._id });
+    tasks.value.push({...response.data, id: response.data._id}); 
   } catch (error) {
     alert('Erro ao adicionar tarefa. Tente fazer login novamente.');
   }
@@ -90,12 +87,12 @@ const handleAddTask = async (taskText) => {
 
 // 3. ALTERNAR CONCLUSÃO (PATCH)
 const handleToggleComplete = async (taskId) => {
-  const task = tasks.value.find(t => t.id === taskId);
+  const task = tasks.value.find(t => t.id === taskId); 
   if (task) {
     const newCompletedStatus = !task.completed;
     try {
       await api.patch(`/tasks/${taskId}`, { completed: newCompletedStatus });
-      task.completed = newCompletedStatus;
+      task.completed = newCompletedStatus; 
     } catch (error) {
       alert('Erro ao atualizar tarefa.');
     }
@@ -116,7 +113,7 @@ const confirmDeleteTask = async () => {
   const taskId = taskToDeleteId.value;
   try {
     await api.delete(`/tasks/${taskId}`); // A API fará o Soft Delete
-    tasks.value = tasks.value.filter(task => task.id !== taskId);
+    tasks.value = tasks.value.filter(task => task.id !== taskId); 
     cancelDeleteTask();
   } catch (error) {
     console.error('Erro ao excluir tarefa.', error);
@@ -125,58 +122,53 @@ const confirmDeleteTask = async () => {
 
 // 6. PREPARAR EDIÇÃO
 const handleEditTask = (taskToEdit) => {
-  editingTask.value = { ...taskToEdit };
+  editingTask.value = { ...taskToEdit }; 
 };
 const handleCancelEdit = () => {
   editingTask.value = null;
 };
 // 7. ATUALIZAR EDIÇÃO (PATCH)
 const handleUpdateTask = async ({ id, text }) => {
-  try {
-    const response = await api.patch(`/tasks/${id}`, { text });
+    try {
+        const response = await api.patch(`/tasks/${id}`, { text });
+        
+        const taskIndex = tasks.value.findIndex(t => t.id === id); 
+        if (taskIndex !== -1) {
+            tasks.value[taskIndex] = {...response.data, id: response.data._id}; 
+        }
+        editingTask.value = null;
 
-    const taskIndex = tasks.value.findIndex(t => t.id === id);
-    if (taskIndex !== -1) {
-      tasks.value[taskIndex] = { ...response.data, id: response.data._id };
+    } catch (error) {
+        console.error('Erro ao atualizar tarefa.', error);
     }
-    editingTask.value = null;
-
-  } catch (error) {
-    console.error('Erro ao atualizar tarefa.', error);
-  }
 };
 
 // 8. LOGOUT
 const handleLogout = () => {
-  localStorage.removeItem('jwtToken');
-  localStorage.removeItem('userId');
-  router.push('/login');
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('userId');
+    router.push('/login');
 };
 
-// 9. FUNÇÃO DE DOWNLOAD DE PDF (AGORA COM CHECAGEM DE 404)
+// 9. FUNÇÃO DE DOWNLOAD DE PDF
 const generatePdfReport = async () => {
   try {
     const response = await api.get('/tasks/report', {
       responseType: 'blob', // Espera resposta binária
     });
-
+    
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', 'relatorio_tarefas.pdf');
+    link.setAttribute('download', 'relatorio_tarefas.pdf'); 
     document.body.appendChild(link);
     link.click();
     link.remove();
     window.URL.revokeObjectURL(url);
 
   } catch (error) {
-    // 🚨 CHECAGEM PARA O ERRO 404 DO BACKEND 🚨
-    if (error.response && error.response.status === 404 && error.response.data && error.response.data.message) {
-      alert(error.response.data.message); // Exibe a mensagem "Nenhuma tarefa encontrada..."
-    } else {
-      console.error('Erro ao gerar PDF:', error);
-      alert('Erro ao gerar relatório. Verifique o console do servidor.');
-    }
+    console.error('Erro ao gerar PDF:', error);
+    alert('Erro ao gerar relatório. Verifique o console do servidor.');
   }
 };
 
@@ -186,12 +178,12 @@ const openEmailModal = () => {
     alert("Não há tarefas para enviar por e-mail!");
     return;
   }
-  emailRecipient.value = '';
+  emailRecipient.value = ''; 
   showEmailModal.value = true;
 };
 const cancelSendEmail = () => {
   showEmailModal.value = false;
-  emailRecipient.value = '';
+  emailRecipient.value = ''; 
 };
 const sendTasksViaMailto = () => {
   const recipient = emailRecipient.value;
@@ -212,8 +204,8 @@ const sendTasksViaMailto = () => {
 
   window.location.href = `mailto:${recipient}?subject=${subject}&body=${encodeURIComponent(body)}`;
 
-  showEmailModal.value = false;
-  emailRecipient.value = '';
+  showEmailModal.value = false; 
+  emailRecipient.value = ''; 
 };
 
 
@@ -354,6 +346,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   z-index: 100;
+  /* Garante que fique na frente de tudo */
 }
 
 .email-modal {
@@ -431,9 +424,9 @@ onMounted(() => {
   cursor: pointer;
   font-size: 1em;
   transition: background-color 0.3s;
-
+  
   /* Cor Roxa para Exemplo */
-  background-color: #6a0dad;
+  background-color: #6a0dad; 
   color: white;
 }
 
