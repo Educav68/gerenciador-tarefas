@@ -81,10 +81,7 @@ export const generateReport = async (req, res) => {
         // Buscar TODAS as tarefas do usuário (incluindo deletadas)
         const allTasks = await Task.find({ userId: req.userId });
         
-        // 🚨 NOVO: LINHA DE DEBUG INSERIDA PARA VERIFICAR O ARRAY 🚨
-        console.log('DEBUG PDF: Tarefas encontradas para o relatório:', allTasks.length);
-        
-        // CHECAGEM PARA BLOQUEAR RELATÓRIO VAZIO 
+        // NOVO: CHECAGEM PARA BLOQUEAR RELATÓRIO VAZIO 
         if (allTasks.length === 0) {
             return res.status(404).send({ message: 'Nenhuma tarefa encontrada para gerar o relatório.' });
         }
