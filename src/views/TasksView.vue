@@ -1,43 +1,44 @@
 <template>
-    <div>
-       
+  <div>
+
     <TaskInput :editingTask="editingTask" :isEditing="editingTask !== null" @add-task="handleAddTask"      
       @update-task="handleUpdateTask" @cancel-edit="handleCancelEdit" />
 
-       
+
     <TaskList :tasks="tasks" @toggle-complete="handleToggleComplete" @delete-task="handleDeleteTask"      
       @edit-task="handleEditTask" />
 
-        <p class="pending-count">Tarefas pendentes: {{ pendingTasksCount }}</p>
+    <p class="pending-count">Tarefas pendentes: {{ pendingTasksCount }}</p>
 
-        <div class="actions-section">
-            <button @click="openEmailModal" class="export-button">Enviar por E-mail</button>
-            <button @click="generatePdfReport" class="report-button">Relatório PDF</button>
-            <button @click="handleLogout" class="cancel-button">Sair</button>
-          </div>
+    <div class="actions-section">
+      <button @click="openEmailModal" class="export-button">Enviar por E-mail</button>
+      <button @click="generatePdfReport" class="report-button">Relatório PDF</button>
+      <button @click="handleLogout" class="cancel-button">Sair</button>
+    </div>
 
-        <div v-if="showDeleteConfirmation" class="delete-confirmation-overlay">
-            <div class="delete-confirmation-modal">
-                <p>Tem certeza que deseja excluir esta tarefa?</p>
-                <div class="modal-buttons">
-                    <button @click="cancelDeleteTask" class="cancel-delete-button">Cancelar</button>
-                    <button @click="confirmDeleteTask" class="confirm-delete-button">Excluir</button>
-                  </div>
-              </div>
-          </div>
+    <div v-if="showDeleteConfirmation" class="delete-confirmation-overlay">
+      <div class="delete-confirmation-modal">
+        <p>Tem certeza que deseja excluir esta tarefa?</p>
+        <div class="modal-buttons">
+          <button @click="cancelDeleteTask" class="cancel-delete-button">Cancelar</button>
+          <button @click="confirmDeleteTask" class="confirm-delete-button">Excluir</button>
+        </div>
+      </div>
 
-        <div v-if="showEmailModal" class="email-modal-overlay">
-            <div class="email-modal">
-                <h3>Enviar Tarefas por E-mail</h3>
-                <p>Para qual e-mail você gostaria de enviar a lista de tarefas?</p>
-                <input type="email" v-model="emailRecipient" placeholder="seuemail@exemplo.com" class="email-input" />
-                <div class="modal-buttons">
-                    <button @click="cancelSendEmail" class="cancel-button">Cancelar</button>
-                    <button @click="sendTasksViaMailto" class="send-email-button">Enviar</button>
-                  </div>
-              </div>
-          </div>
-     
+    </div>
+
+    <div v-if="showEmailModal" class="email-modal-overlay">
+      <div class="email-modal">
+        <h3>Enviar Tarefas por E-mail</h3>
+        <p>Para qual e-mail você gostaria de enviar a lista de tarefas?</p>
+        <input type="email" v-model="emailRecipient" placeholder="seuemail@exemplo.com" class="email-input" />
+        <div class="modal-buttons">
+          <button @click="cancelSendEmail" class="cancel-button">Cancelar</button>
+          <button @click="sendTasksViaMailto" class="send-email-button">Enviar</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -215,7 +216,6 @@ const sendTasksViaMailto = () => {
   showEmailModal.value = false;
   emailRecipient.value = '';
 };
-
 
 onMounted(() => {
   fetchTasks();
