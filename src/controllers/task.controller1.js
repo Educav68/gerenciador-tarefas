@@ -78,14 +78,8 @@ export const deleteTask = async (req, res) => {
 // 5. FUNÇÃO DE GERAÇÃO DE RELATÓRIO (PDF)
 export const generateReport = async (req, res) => {
     try {
-        // Buscar TODAS as tarefas do usuário (incluindo deletadas)
+        // Buscar TODAS as tarefas do usuário (incluindo deletadas) para o relatório
         const allTasks = await Task.find({ userId: req.userId });
-        
-        // NOVO: CHECAGEM PARA BLOQUEAR RELATÓRIO VAZIO 
-        if (allTasks.length === 0) {
-            return res.status(404).send({ message: 'Nenhuma tarefa encontrada para gerar o relatório.' });
-        }
-        
         const user = await User.findById(req.userId).select('email');
 
         // Filtrar tarefas por categoria
@@ -131,6 +125,3 @@ export const generateReport = async (req, res) => {
         res.status(500).send({ message: 'Falha ao gerar o relatório PDF.' });
     }
 };
-
-// EXPORTAÇÃO FINAL DE TODOS OS CONTROLADORES
-export { getTasks, addTask, updateTask, deleteTask, generateReport };
