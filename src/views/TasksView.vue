@@ -1,11 +1,11 @@
 <template>
   <div>
 
-    <TaskInput :editingTask="editingTask" :isEditing="editingTask !== null" @add-task="handleAddTask"      
+    <TaskInput :editingTask="editingTask" :isEditing="editingTask !== null" @add-task="handleAddTask"
       @update-task="handleUpdateTask" @cancel-edit="handleCancelEdit" />
 
 
-    <TaskList :tasks="tasks" @toggle-complete="handleToggleComplete" @delete-task="handleDeleteTask"      
+    <TaskList :tasks="tasks" @toggle-complete="handleToggleComplete" @delete-task="handleDeleteTask"
       @edit-task="handleEditTask" />
 
     <p class="pending-count">Tarefas pendentes: {{ pendingTasksCount }}</p>
@@ -24,7 +24,6 @@
           <button @click="confirmDeleteTask" class="confirm-delete-button">Excluir</button>
         </div>
       </div>
-
     </div>
 
     <div v-if="showEmailModal" class="email-modal-overlay">
@@ -216,6 +215,7 @@ const sendTasksViaMailto = () => {
   showEmailModal.value = false;
   emailRecipient.value = '';
 };
+
 
 onMounted(() => {
   fetchTasks();
